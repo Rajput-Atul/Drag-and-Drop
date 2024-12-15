@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag & Drop</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+  <script src="drag&drop.js"></script>
+  
+</head>
+<body>
+    <div class="text"><h1>Drag & Drop</h1></div>
+    
+ <div class="container ">
+    
+    <div class="dropzone" id="box1">
+        <div class="draggable" draggable="true" id="item1">Item 1</div>
+        <div class="draggable" draggable="true" id="item2">Item 2</div>
+        <div class="draggable" draggable="true" id="item3">Item 3</div>
+        <div class="draggable" draggable="true" id="item4">Item 4</div>
+    </div>
+    <div class="dropzone" id="box2"></div>
+  </div>
+<script>
+    const draggableItems = document.querySelectorAll('.draggable');
+    const dropzones = document.querySelectorAll('.dropzone');
+
+    draggableItems.forEach((item) => {
+      item.addEventListener('dragstart', (event) => {
+        event.dataTransfer.setData('text/plain', event.target.id);
+        setTimeout(() => {
+          item.classList.add('hidden');
+        }, 0);
+      });
+
+      item.addEventListener('dragend', (event) => {
+        item.classList.remove('hidden');
+      });
+    });
+
+    dropzones.forEach((dropzone) => {
+      dropzone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropzone.classList.add('hover');
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('hover');
+      });
+
+      dropzone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropzone.classList.remove('hover');
+        const draggedElementId = event.dataTransfer.getData('text/plain');
+        const draggedElement = document.getElementById(draggedElementId);
+        if (draggedElement && dropzone !== draggedElement.parentElement) {
+          dropzone.appendChild(draggedElement);
+        }
+      });
+    });
+
+    const style = document.createElement('style');
+    style.innerHTML = ".hidden { display: none; }";
+    document.head.appendChild(style);
+</script>
+  
+</body>
+</html>
